@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Lambda to fetch NYC temperature using external API
+
+Resources:
+  WeatherFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: FetchNYCTemperature
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.11
+      Timeout: 30
+      MemorySize: 128
+      CodeUri: s3://lambda-artifacts-prod/lambda.zip
+      Environment:
+        Variables:
+          API_KEY: "<YOUR_API_KEY>"  # Replace with SSM/SecretsManager for production
+          CITY: "New York"
+      Policies:
+        - AWSLambdaBasicExecutionRole
+
+Outputs:
+  WeatherFunctionArn:
+    Description: "ARN of the Lambda Function"
+    Value: !GetAtt WeatherFunction.Arn
