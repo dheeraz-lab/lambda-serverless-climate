@@ -1,0 +1,17 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.11
+    commands:
+      - pip install --upgrade awscli
+  build:
+    commands:
+      - echo "Zipping Lambda function"
+      - zip -r lambda.zip lambda_function.py
+      - echo "Uploading lambda.zip to S3"
+      - aws s3 cp lambda.zip s3://lambda-artifacts-prod/lambda.zip
+artifacts:
+  files:
+    - template.yml
